@@ -5,7 +5,7 @@ URL = https://edlyn-marva-indoshop.pbp.cs.ui.ac.id/
 
 <p>
 <details>
-<summary>Cool Dropdown #1</summary>
+<summary>Tugas 2</summary>
 
 
 1. penjelasan implementasi checklist secara step-by-step
@@ -45,5 +45,9 @@ URL = https://edlyn-marva-indoshop.pbp.cs.ui.ac.id/
 6. Menurut saya, tutorial 1 kemarin sudah sangat baik. Setiap command yang saya tidak pahami dapat saya pelajari lebih lanjut dengan saangat mudah karena asdos memberikan keterangan yang mudah dimengerti untuk setiap bagiannya. Selain itu, petunjuk mengenai apa yang harus dilakukan sudah disusun dengan sangat baik sehingga mudah diikuti
     
 
+</details>
+<details>
+    <summary> Tugas 3</summary>
+    lagi on going
 </details>
 </p>
