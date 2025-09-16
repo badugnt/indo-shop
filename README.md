@@ -48,6 +48,32 @@ URL = https://edlyn-marva-indoshop.pbp.cs.ui.ac.id/
 </details>
 <details>
     <summary> Tugas 3</summary>
-    lagi on going
+    
+1. Kita memerlukan data delivery dalam pengimplementasian sebuah platform karena platform modern biasanya memisahkan tampilan depan (frontend) seperti website atau aplikasi mobile, dengan logika dan penyimpanan data di belakang (backend). Data delivery berfungsi sebagai jembatan yang menghubungkan kedua bagian ini, memungkinkan mereka untuk saling berkomunikasi dengan bertukar data terstruktur seperti JSON atau XML.
+
+2. Saya pribadi lebih menyukai JSON  karena formatnya sederhana, mudah dibaca. Sintaksnya sederhana tanpa tag pembuka-penutup panjang sehingga ukuran data lebih kecil, sedangkan XML lebih panjang dan rumit sehingga kini jarang dipakai kecuali untuk dokumen atau sistem lama. Json juga lebih cepat di parsing. Hal ini juga yang membuat JSON lebih populer
+
+3. is_valid() pada form Django memeriksa apakah data yang dikirim sesuai aturan field dan validator di form, sekaligus menjalankan proses cleaning. Kita membutuhkannya agar hanya data yang sudah lolos pengecekan (misal  panjang url, format angka ) yang diproses atau disimpan ke database. Kita membutuhkannya untuk mmastikan data yang disimpan ke database konsisten dan mematuhi aturan bisnilogic yang telah ditetapkan
+
+4. Kita membutuhkan csrf_token untuk melindungi form dan request POST kita dari serangan Cross-Site Request Forgery (CSRF). CSRF adalah serangan dimana seorang penyerang menipu korban (yang sudah login) untuk melakukan sebuah tindakan (request) di website target tanpa sepengetahuan korban. Jika form Django tidak menyertakan csrf_token, server akan menolak request POST tersebut karena server membandingkan token yang dikirim dengan token yang disimpan di server. 
+
+5. Berikut langkah yang saya lakukan
+
+    1) pertama saya membuat file base.html pada direktori template root sebagai kerangka layout utama 
+    2) kemudian main/forms.py saya membuat class ProductForm untuk membuat Product baru. Di sini saya membuat fields yang perlu diisi oleh user seperti name, price dll.
+    3) saya membuat template create_product.html yang  mengextends base.html dan akan generate{% csrf_token %} random. Template ini akan menampilkan ProductForm 
+    4) forms tadi diimpor ke views dan saya membuat function create_product yang mengembalikan dict berisi ProductForm dan akan menmpilkannya di create_product.html.
+    5) impor function ke main/urls.py dan menambahkan URL ke dalan urlpatterns
+    6) Setelah itu saya membuat function show_product di views.py yang akan menampilkan detail produk apabila ditemukan di product_detail.html
+    7) kemudian saya mengimpor function tersebut ke urls.py dan menambahkan path URL ke variable urlpatterns
+    8) pada berkas views.py saya menambahkan 4 fungsi baru yaitu show_xml, show_json, show_xml_by_id, show_json_by_id yang masing masing sesuai namanya akan mengambil  object Product di database (di filter sesuai uuid apabila show by id) kemudian format objek diubah menjadi xml/json sesuai request dan mengirim string xml ataupun json ke browser klien sehingga tidak dikenali sebagai html biasa
+    9) selain itu pada fungsi show_xml_by_id & show_json_by_id saya menambahkan try and except yang akan menghandle apabila tidak ditemukan objek yang memiliki uuid yang di request
+    10) untuk melakukan routing saya mengimpor function yang sudah dibuat pada views.py ke ,main/urls.py 
+    11) setelah itu saya menambahkan path URL ke dalam urlpatterns untuk mengakses fungsi yang sudah diimpor tadi
+
+
+
+
+
 </details>
 </p>
