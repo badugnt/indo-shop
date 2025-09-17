@@ -48,6 +48,7 @@ URL = https://edlyn-marva-indoshop.pbp.cs.ui.ac.id/
 </details>
 <details>
     <summary> Tugas 3</summary>
+postman utl = https://drive.google.com/drive/folders/1GWu1P0OkPzyD2C1SjRl9fKzgSig__-hG?usp=sharing
     
 1. Kita memerlukan data delivery dalam pengimplementasian sebuah platform karena platform modern biasanya memisahkan tampilan depan (frontend) seperti website atau aplikasi mobile, dengan logika dan penyimpanan data di belakang (backend). Data delivery berfungsi sebagai jembatan yang menghubungkan kedua bagian ini, memungkinkan mereka untuk saling berkomunikasi dengan bertukar data terstruktur seperti JSON atau XML.
 
