@@ -92,6 +92,7 @@ def register(request):
             return redirect('main:login')
     context = {'form':form}
     return render(request, 'register.html', context)
+
 def login_user(request):
    if request.method == 'POST':
       form = AuthenticationForm(data=request.POST)
@@ -101,8 +102,6 @@ def login_user(request):
         response = HttpResponseRedirect(reverse("main:show_main"))
         response.set_cookie('last_login', str(datetime.datetime.now()))
         return response
-
-
    else:
       form = AuthenticationForm(request)
    context = {'form': form}

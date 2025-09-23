@@ -86,8 +86,24 @@ Secara teknis, kelas ini menurunkan sifat dari forms.Form, sehingga tetap mengik
 
 3.Secara umum, cookies menyimpan data langsung di sisi client atau browser pengguna. Keuntungannya adalah sederhana dan tidak membebani server karena data tidak perlu diakses dari sana, bahkan memungkinkan akses secara offline. Namun, kekurangannya terletak pada masalah keamanan karena data cookies dapat dimanipulasi oleh client, serta kapasitas penyimpanannya yang sangat terbatas. Di sisi lain, session menyimpan data di sisi server, dengan ID sesi unik yang disimpan di cookie browser sebagai jembatan. Ini memberikan keunggulan keamanan yang jauh lebih baik karena data sensitif tidak pernah terpapar ke sisi client. Session juga menawarkan kapasitas penyimpanan yang tidak terbatas, hanya dibatasi oleh sumber daya server. Kekurangannya adalah session dapat membebani server, terutama pada aplikasi dengan jutaan pengguna
 
+4. Penggunaan cookies dalam pengembangan web tidak dapat dianggap aman secara default, melainkan memerlukan konfigurasi dan implementasi yang hati-hati untuk memitigasi berbagai risiko keamanan yang melekat. Risiko utama yang harus diwaspadai termasuk kerentanan Cross-Site Scripting (XSS) dimana penyerang dapat mengeksekusi kode JavaScript berbahaya untuk mencuri cookies pengguna, serangan Cross-Site Request Forgery (CSRF) yang memanfaatkan autorisasi dari browser terhadap cookies untuk melakukan aksi tidak sah atas nama pengguna, session hijacking dimana penyerang dapat mengambil alih sesi pengguna dengan mencuri session identifier, dan masih banyak lagi.
+
+Django menangani tantangan keamanan cookies ini melalui beberapa mekanisme built-in yang dirancang untuk melindungi data pengguna. Salah satu fitur utama adalah penggunaan CSRF tokens yang secara otomatis disertakan dalam form HTML untuk mencegah serangan CSRF. Selain itu, Django memungkinkan pengaturan atribut keamanan pada cookies seperti HttpOnly, yang mencegah akses cookies melalui JavaScript, dan Secure, yang memastikan cookies hanya dikirim melalui koneksi HTTPS. Django juga menyediakan opsi untuk mengenkripsi cookies dan mengatur masa berlaku (expiry) yang sesuai untuk mengurangi risiko session hijacking. Dengan menerapkan praktik-praktik ini, Django membantu pengembang membangun aplikasi web yang lebih aman dan melindungi data sensitif pengguna dari potensi ancaman.
+
+5. Berikut langkah yang saya lakukan untuk mengimplementasikan fitur login, logout, dan registrasi di aplikasi Django saya. selain itu saya juga Merestriksi Akses Halaman Main dan produk Detail:
 
 
+    1) pertama, saya membuat view register di main/views.py yang akan menampilkan SignUpForm. Jika form valid, data user baru disimpan ke database dan user langsung login serta diarahkan ke halaman utama.
+    2) setelah itu, saya membuat template register.html yang mengextends base.html dan menampilkan SignUpForm. Template ini juga menyertakan {% csrf_token %} untuk keamanan.
+    3) untuk login, saya menggunakan AuthenticationForm bawaan Django. Saya membuat view login_user di main/views.py yang menampilkan form login. Jika valid, user akan diarahkan ke halaman utama.
+    4) saya juga membuat template login.html yang mengextends base.html dan menampilkan AuthenticationForm beserta {% csrf_token %}.
+    5) untuk logout, saya membuat function logout_user di main/views.py yang memanggil fungsi logout() dari django.contrib.auth dan mengarahkan user ke halaman login setelah logout.
+    6) semua view ini saya daftarkan di main/urls.py dengan path masing-masing seperti 'register/', 'login/', dan 'logout/'.
+    7) untuk merestriksi akses ke halaman main dan detail produk, saya menggunakan decorator @login_required pada view show_main dan show_product. Ini memastikan bahwa hanya pengguna yang sudah login yang dapat mengakses halaman-halaman tersebut.
+    8) untuk menghubungkan model Product dengan User, saya menambahkan field ForeignKey ke model Product yang mengacu pada model User bawaan Django di main/models.py.
+    9) pada fungsi create_product di main/views.py, saya memodifikasi agar produk yang dibuat otomatis terkait dengan user yang sedang login (creator).
+    10) kemudian untuk menerapkan cookies seperti last_login pada halaman utama aplikasi saya menyimpan informasi last login di cookies dengan menambahkan response.set_cookie('last_login', str(datetime.now())) pada fungsi login_user di main/views.py supaya bisa di simpan di cookies. untuk show di main.html saya menambahkan {{ last_login }} yang diambil dari context di show_main.
+    11) untuk Menampilkan detail informasi pengguna yang sedang logged in seperti username dan last login di halaman utama, saya menambahkan 'name': request.user.username di context show_main di main/views.py. Kemudian di main.html saya menampilkan {{ name }} untuk username dan {{ last_login }} untuk sesi terakhir login.
 
 </details>
 </p>
