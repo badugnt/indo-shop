@@ -77,4 +77,17 @@ postman utl = https://drive.google.com/drive/folders/1GWu1P0OkPzyD2C1SjRl9fKzgSi
 
 
 </details>
+<details>
+    <summary>Tugas 4</summary>
+1. Dalam konteks Django, AuthenticationForm merupakan kelas formulir bawaan yang secara langsung terintegrasi dengan sistem otentikasi Django.
+Secara teknis, kelas ini menurunkan sifat dari forms.Form, sehingga tetap mengikuti struktur dan cara kerja form Django pada umumnya, tetapi dengan fokus khusus pada proses login. Kelebihan utamanya yaitu, kita tidak perlu lagi membangun fitur-fitur dasar seperti pendaftaran, login, dan logout dari nol. Django telah menyediakan built-in forms seperti UserCreationForm dan AuthenticationForm yang sudah terintegrasi dengan model User bawaannya. Kekurangannya adalah, kita memiliki keterbatasan dalam menyesuaikan proses otentikasi sesuai kebutuhan spesifik aplikasi kita. Misalnya, jika kita ingin menambahkan lapisan keamanan tambahan atau mengubah cara validasi kredensial, kita mungkin perlu membuat formulir kustom yang lebih kompleks.
+
+2. Autentikasi berfokus pada verifikasi identitas pengguna, yaitu memastikan bahwa pengguna adalah siapa yang mereka klaim, dan ini dicapai melalui proses seperti validasi kredensial (nama pengguna dan kata sandi) saat login. Django mengimplementasikan ini dengan sistem autentikasi bawaan yang mencakup User model, AuthenticationForm, serta fungsi login() dan authenticate(). Setelah pengguna terautentikasi, barulah proses otorisasi dimulai, yang menentukan hak akses atau izin pengguna terhadap berbagai bagian aplikasi. Django mengelola otorisasi melalui sistem izin (permissions) dan grup (groups) yang memungkinkan kita untuk menetapkan hak akses spesifik kepada pengguna atau kelompok pengguna tertentu. Dengan demikian, autentikasi adalah langkah awal untuk mengenali pengguna, sedangkan otorisasi adalah langkah lanjutan untuk mengatur apa yang boleh dan tidak boleh dilakukan oleh pengguna tersebut dalam aplikasi. Misalnya, dengan menggunakan decorator seperti @permission_required, pengembang dapat membatasi akses ke sebuah view atau fungsionalitas
+
+3.Secara umum, cookies menyimpan data langsung di sisi client atau browser pengguna. Keuntungannya adalah sederhana dan tidak membebani server karena data tidak perlu diakses dari sana, bahkan memungkinkan akses secara offline. Namun, kekurangannya terletak pada masalah keamanan karena data cookies dapat dimanipulasi oleh client, serta kapasitas penyimpanannya yang sangat terbatas. Di sisi lain, session menyimpan data di sisi server, dengan ID sesi unik yang disimpan di cookie browser sebagai jembatan. Ini memberikan keunggulan keamanan yang jauh lebih baik karena data sensitif tidak pernah terpapar ke sisi client. Session juga menawarkan kapasitas penyimpanan yang tidak terbatas, hanya dibatasi oleh sumber daya server. Kekurangannya adalah session dapat membebani server, terutama pada aplikasi dengan jutaan pengguna
+
+
+
+
+</details>
 </p>
