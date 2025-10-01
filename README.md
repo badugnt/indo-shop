@@ -107,3 +107,34 @@ Django menangani tantangan keamanan cookies ini melalui beberapa mekanisme built
 
 </details>
 </p>
+
+<p><details>
+<summary>Tugas 5</summary>
+1. Urutan prioritas pengambilan CSS selector
+CSS memiliki aturan khusus dalam menentukan selector mana yang akan diterapkan ketika terdapat lebih dari satu aturan untuk elemen yang sama. Prioritas CSS ditentukan oleh spesifisitas, di mana urutannya adalah: inline style (paling tinggi), ID selector, class/atribut/pseudo-class selector, dan terakhir element/tag selector.  Jika dua selector memiliki spesifisitas yang sama, maka aturan yang didefinisikan paling akhir di dalam file CSS akan didahulukan. Sebagai pengecualian, terdapat deklarasi !important yang dapat ditambahkan pada sebuah properti CSS (contoh: color: red !important;). Aturan ini akan mengalahkan semua tingkat spesifisitas lainnya.
+
+2. Responsive design adalah sebuah pendekatan dalam pengembangan web yang bertujuan agar tampilan situs web dapat beradaptasi secara optimal pada berbagai ukuran layar perangkat, mulai dari desktop, tablet, hingga smartphone. Konsep ini menjadi sangat penting karena tiga alasan utama. Pertama, dari sisi pengalaman pengguna (User Experience), situs yang responsif memberikan kemudahan navigasi dan keterbacaan tanpa mengharuskan pengguna melakukan pinch-and-zoom atau scroll horizontal, yang dapat membuat frustrasi dan menyebabkan pengguna meninggalkan situs. Kedua, dari sisi SEO (Search Engine Optimization), mesin pencari seperti Google secara aktif memprioritaskan situs yang mobile-friendly dalam hasil pencariannya. Situs yang tidak responsif akan mendapatkan peringkat yang lebih rendah, sehingga mengurangi visibilitas dan trafik organik. Ketiga, dari sisi efisiensi pengembangan, dengan responsive design, pengembang hanya perlu mengelola satu basis kode (codebase) untuk semua perangkat, berbeda dengan zaman dahulu di mana pengembang seringkali harus membuat versi situs terpisah untuk desktop dan mobile (misalnya www.contoh.com dan m.contoh.com).
+
+
+3. Perbedaan Margin, Border, dan Padding
+Dalam CSS, setiap elemen HTML dapat dianggap sebagai sebuah kotak, yang dikenal dengan konsep Box Model. Tiga komponen utama yang mengatur ruang di sekitar konten elemen adalah margin, border, dan padding. Padding adalah ruang transparan yang berada di dalam batas elemen, yaitu di antara konten (seperti teks atau gambar) dan border. Fungsinya adalah untuk memberikan jarak agar konten tidak menempel langsung pada garis batas. Border adalah garis yang mengelilingi padding dan konten. Border memiliki ketebalan, gaya (misalnya solid, putus-putus), dan warna yang dapat diatur. Margin adalah ruang transparan yang berada di luar border. Fungsinya adalah untuk menciptakan jarak atau mendorong elemen lain agar tidak saling menempel.
+
+4. Flexbox dirancang untuk tata letak satu dimensi, artinya ia sangat baik dalam mengatur item-item dalam satu baris (row) atau satu kolom (column). Kegunaan utamanya adalah untuk menyusun, meratakan, dan mendistribusikan ruang di antara item-item dalam sebuah kontainer. Di sisi lain, Grid Layout dirancang untuk tata letak dua dimensi, yaitu mengatur elemen dalam baris dan kolom secara bersamaan. Grid adalah alat yang sangat kuat untuk merancang tata letak halaman web secara keseluruhaan.
+
+5. berikut adalah langkah saya untuk Desain Web menggunakan HTML, CSS dan Framework CSS (tailwind)
+    1) pertama saya menambahkan link ke file CSS Tailwind di dalam tag <head> di base.html
+    2) saya menambahkan whitelist di settings.py agar file static bisa diakses di mode production
+    3) saya membuat static/css/global.css yang berisi beberapa aturan CSS kustom untuk menyesuaikan tampilan aplikasi. file ini dibuat static agar bisa diakses oleh template HTML dan di link di base.html. file ini berisi aturan css yang tidak tersedia di tailwind
+    4) Agar style CSS yang ditambahkan di global.css dapat digunakan dalam template Django, kamu perlu menambahkan file tersebut ke base.html
+    5) kemudian saya membuat function baru di views yaitu edit_product yang akan menghandle edit produk dan delete_product yang akan menghandle penghapusan produk di main/views.py
+    6) setelah itu saya membuat html baru yaitu edit_product.html yang mengextends base.html. di sini saya membuat form yang menampilkan data produk yang akan diedit. 
+    7) saya mengimpor function tersebut ke main/urls.py dan menambahkan path URL ke dalam urlpatterns
+    8) saya juga membuat card_product.html yang berisi template card produk yang akan di include di main.html
+    9) selain itu, saya membuat navbar.html yang berisi template navbar yang akan di include di main.html
+    10) pada main.html saya menginclude card_product.html untuk menampilkan setiap produk dalam bentuk card dan include navbar.html untuk menampilkan navbar di bagian atas halaman.
+    11) selanjutnya saya menambahkan beberapa class tailwind di setiap elemen HTML di template seperti main.html, base.html, create_product.html, edit_product.html, register.html, login.html, product_detail.html untuk meodifikasi tampilan aplikasi
+
+
+
+</details></p>
+
