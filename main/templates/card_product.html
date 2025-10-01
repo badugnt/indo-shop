@@ -3,7 +3,7 @@
   <!-- Thumbnail -->
   <div class="aspect-[16/9] relative overflow-hidden">
     {% if product.thumbnail %}
-      <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+      <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
     {% else %}
       <div class="w-full h-full bg-gray-200"></div>
     {% endif %}
@@ -41,7 +41,7 @@
     </h3>
     <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 leading-tight">
       <a href="{% url 'main:show_product' product.id %}" class="hover:text-green-600 transition-colors">
-        Rp {{ product.price }}
+        Rp {{ product.formatted_price }}
       </a>
     </h3>
 

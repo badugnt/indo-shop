@@ -3,7 +3,7 @@
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
           <h1 class="text-xl font-semibold text-gray-900">
-            <span class="text-red-600">Indo</span> Shop
+            <span class="text-[#d74a1f]">Indo</span> Shop
           </h1>
         </div>
         
@@ -12,9 +12,13 @@
           <a href="/" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
             Home
           </a>
+          <a href="{% url 'main:sort_product_category' category='jersey' %}" class="block text-gray-600 hover:text-gray-900 font-medium py-3 transition-colors">
+            Jersey
+          </a>
           <a href="{% url 'main:create_product' %}" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
             Create Product
           </a>
+
         </div>
         
         <!-- Desktop User Section -->
@@ -57,6 +61,9 @@
         <div class="space-y-1">
           <a href="/" class="block text-gray-600 hover:text-gray-900 font-medium py-3 transition-colors">
             Home
+          </a>
+          <a href="{% url 'main:sort_product_category' category='jersey' %}" class="block text-gray-600 hover:text-gray-900 font-medium py-3 transition-colors">
+            Jersey
           </a>
           <a href="{% url 'main:create_product' %}" class="block text-gray-600 hover:text-gray-900 font-medium py-3 transition-colors">
             Create Product

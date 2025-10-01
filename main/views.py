@@ -130,3 +130,9 @@ def delete_product(request, id):
     product = get_object_or_404(Product, pk=id)
     product.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
+def sort_product_category(request, category):
+    product_list = Product.objects.filter(category=category)
+    context = {
+        'product_list': product_list
+    }
+    return render(request, "main.html", context)
