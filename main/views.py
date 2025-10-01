@@ -132,6 +132,10 @@ def delete_product(request, id):
     return HttpResponseRedirect(reverse('main:show_main'))
 def sort_product_category(request, category):
     product_list = Product.objects.filter(category=category)
+    filter_param = request.GET.get("filter")
+
+    if filter_param == "my":
+        product_list = product_list.filter(user=request.user)
     context = {
         'product_list': product_list
     }
