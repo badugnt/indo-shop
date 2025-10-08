@@ -127,37 +127,57 @@ def show_json_by_id(request, product_id):
 
     
 def register(request):
-    form = UserCreationForm()
-
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Your account has been successfully created!')
-            return redirect('main:login')
-    context = {'form':form}
-    return render(request, 'register.html', context)
+            form = UserCreationForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({"message": "Account created successfully!"}, status=200)
+            else:
+                return JsonResponse({"errors": form.errors}, status=400)
+    elif request.method == "GET":
+        form = UserCreationForm()
+        # Mengirimkan objek 'form' ke konteks template
+        return render(request, 'register.html', {'form': form})
+
 
 def login_user(request):
-   if request.method == 'POST':
-      form = AuthenticationForm(data=request.POST)
-      if form.is_valid():
-        user = form.get_user()
-        login(request, user)
-        response = HttpResponseRedirect(reverse("main:show_main"))
-        response.set_cookie('last_login', str(datetime.datetime.now()))
-        messages.success(request, 'Login successful!')
-        return response
-   else:
-      form = AuthenticationForm(request)
-   context = {'form': form}
-   return render(request, 'login.html', context)
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        errors = {}
+
+        if not username:
+            errors['username'] = 'Username is required.'
+        if not password:
+            errors['password'] = 'Password is required.'
+
+        if errors:
+            return JsonResponse({'success': False, 'errors': errors}, status=400)
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            response = JsonResponse({'success': True, 'message': 'Login successful!'})
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+        else:
+            errors['__all__'] = 'Invalid username or password.'
+            return JsonResponse({'success': False, 'errors': errors}, status=400)
+    elif request.method == 'GET':
+        form = AuthenticationForm()
+        context = {'form': form}
+        return render(request, 'login.html', context)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)
+
 
 def logout_user(request):
     logout(request)
+    messages.success(request, 'Logout successful!')
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
-    messages.success(request, 'Logout successful!')
+    
     return response
 
 def edit_product(request, id):

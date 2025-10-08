@@ -15,7 +15,7 @@
     </div>
     
     <div class="px-6 py-4 space-y-6 form-style">
-      <form id="productForm" onsubmit="event.preventDefault(); addProductEntry();">
+      <form id="productForm" >
         {% csrf_token %}
         <div class="mb-4">
           <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
@@ -104,17 +104,17 @@ async function addProductEntry() {
   // MODIFIKASI: Reset form produk setelah berhasil dikirim
   document.getElementById("productForm").reset();
   
-  // Fungsi-fungsi ini diasumsikan sudah ada di kode Anda
+  
   hideModal(); 
   
-  // MODIFIKASI: Pesan notifikasi diubah untuk produk
+  
   showToast('Product added successfully!', '', 'success');
 
-  // MODIFIKASI: Event diubah menjadi 'productAdded'
+  
   // Ini berguna jika Anda ingin me-refresh daftar produk secara otomatis
   document.dispatchEvent(new CustomEvent('productAdded'));
 
-  // Mengembalikan false untuk mencegah perilaku default form submission (jika dipanggil dari event `onsubmit`)
+  
   return false; 
 }
   document.getElementById("productForm").addEventListener("submit", function(e) {

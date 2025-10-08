@@ -59,20 +59,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submit-btn');
 
     form.addEventListener('submit', async function(event) {
-        // 1. Mencegah form melakukan submit tradisional (yang menyebabkan reload)
+        
         event.preventDefault();
 
-        // Tampilkan status loading di tombol agar pengguna tahu sesuatu sedang terjadi
+        
         submitBtn.disabled = true;
         submitBtn.textContent = 'Updating...';
 
-        // 2. Kirim data form menggunakan Fetch API (AJAX)
-        // window.location.pathname akan otomatis menggunakan URL halaman ini (/product/uuid/edit/)
         const response = await fetch(window.location.pathname, {
             method: 'POST',
             body: new FormData(form),
             headers: {
-                // Header ini memberitahu view Django bahwa ini adalah permintaan AJAX
+                
                 'X-Requested-With': 'XMLHttpRequest' 
             }
         });
@@ -80,18 +78,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const result = await response.json();
 
         if (response.ok) {
-            // 3. JIKA SUKSES:
-            // Tampilkan notifikasi toast (pastikan fungsi showToast ada di base.html)
+ 
             showToast('Success!', result.message, 'success');
             
-            // Tunggu 1.5 detik agar pengguna sempat melihat toast
+            
             setTimeout(() => {
-                // Arahkan kembali ke halaman utama
+                
                 window.location.href = "{% url 'main:show_main' %}";
             }, 1500);
 
         } else {
-            // 4. JIKA GAGAL (misal: validasi error):
+        
             // Tampilkan pesan error dan aktifkan kembali tombolnya
             alert("Error: " + JSON.stringify(result.error));
             submitBtn.disabled = false;

@@ -5,7 +5,7 @@ function showToast(title, message, type = 'normal', duration = 7000) {
     
     if (!toastComponent) return;
 
-    // Remove all type classes first
+    
     toastComponent.classList.remove(
         'bg-red-50', 'border-red-500', 'text-red-600',
         'bg-green-50', 'border-green-500', 'text-green-600',
@@ -14,11 +14,11 @@ function showToast(title, message, type = 'normal', duration = 7000) {
 
     // Set type styles and icon
     if (type === 'success') {
-        toastComponent.classList.add('bg-green-50', 'border-green-500', 'text-green-600');
-        toastComponent.style.border = '1px solid #22c55e';
+        toastComponent.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-600');
+        toastComponent.style.border = '1px solid #42d4f5';
     } else if (type === 'error') {
-        toastComponent.classList.add('bg-red-50', 'border-red-500', 'text-red-600');
-        toastComponent.style.border = '1px solid #ef4444';
+        toastComponent.classList.add('bg-orange-50', 'border-orange-500', 'text-orange-600');
+        toastComponent.style.border = '1px solid #f59642';
     } else {
         toastComponent.classList.add('bg-white', 'border-gray-300', 'text-gray-800');
         toastComponent.style.border = '1px solid #d1d5db';
