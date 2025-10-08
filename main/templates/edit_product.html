@@ -6,24 +6,22 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="bg-gray-50 w-full min-h-screen">
+<div class="bg-gray-50 w-full min-h-screen pt-16">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <!-- Back Navigation -->
     <div class="mb-6">
       <a href="{% url 'main:show_main' %}" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
         ← Back to Products
       </a>
     </div>
     
-    <!-- Form -->
     <div class="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 form-style">
       <div class="mb-8">
         <h1 class="text-2xl font-bold text-gray-900 mb-2">Edit Product</h1>
         <p class="text-gray-600">Update your product details</p>
       </div>
       
-      <form method="POST" class="space-y-6">
+      <form id="editForm" method="POST" class="space-y-6">
         {% csrf_token %}
         {% for field in form %}
           <div>
@@ -46,7 +44,7 @@
           <a href="{% url 'main:show_main' %}" class="order-2 sm:order-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-colors text-center">
             Cancel
           </a>
-          <button type="submit" class="order-1 sm:order-2 flex-1 bg-green-600 text-white px-6 py-3 rounded-md font-medium hover:bg-green-700 transition-colors">
+          <button type="submit" id="submit-btn" class="order-1 sm:order-2 flex-1 bg-green-600 text-white px-6 py-3 rounded-md font-medium hover:bg-green-700 transition-colors">
             Update Product
           </button>
         </div>
@@ -54,4 +52,54 @@
     </div>
   </div>
 </div>
-{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editForm');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async function(event) {
+        // 1. Mencegah form melakukan submit tradisional (yang menyebabkan reload)
+        event.preventDefault();
+
+        // Tampilkan status loading di tombol agar pengguna tahu sesuatu sedang terjadi
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Updating...';
+
+        // 2. Kirim data form menggunakan Fetch API (AJAX)
+        // window.location.pathname akan otomatis menggunakan URL halaman ini (/product/uuid/edit/)
+        const response = await fetch(window.location.pathname, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                // Header ini memberitahu view Django bahwa ini adalah permintaan AJAX
+                'X-Requested-With': 'XMLHttpRequest' 
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // 3. JIKA SUKSES:
+            // Tampilkan notifikasi toast (pastikan fungsi showToast ada di base.html)
+            showToast('Success!', result.message, 'success');
+            
+            // Tunggu 1.5 detik agar pengguna sempat melihat toast
+            setTimeout(() => {
+                // Arahkan kembali ke halaman utama
+                window.location.href = "{% url 'main:show_main' %}";
+            }, 1500);
+
+        } else {
+            // 4. JIKA GAGAL (misal: validasi error):
+            // Tampilkan pesan error dan aktifkan kembali tombolnya
+            alert("Error: " + JSON.stringify(result.error));
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Update Product';
+        }
+    });
+
+    
+});
+</script>
+{% endblock content %}
