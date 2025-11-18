@@ -1,7 +1,9 @@
 from itertools import product
+import json
 from typing import Never
 from urllib import request
 from django.shortcuts import get_object_or_404, redirect, render
+import requests
 from main.models import Product
 from main.forms import ProductForm
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -15,6 +17,10 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.html import strip_tags
+import json
+from django.http import JsonResponse
 
 # Create your views here.
 @login_required(login_url='/login')
@@ -66,15 +72,19 @@ def show_xml(request):
      xml_data = serializers.serialize("xml", product_list)
      return HttpResponse(xml_data, content_type="application/xml")
 
+
 def show_json(request):
     #  product_list = Product.objects.all()
     #  json_data = serializers.serialize("json", product_list)
     #  return HttpResponse(json_data, description_type="application/json")
         filter_type = request.GET.get("filter", "all")  
+        print(request.user)
+        print(filter_type)
+        
         if filter_type == "all":
             product_list = Product.objects.all()
         else:
-            product_list = Product.objects.filter(user=request.user)
+            product_list = Product.objects.filter(user_id=request.user)
         data = [{
             'id': str(product.id)
             ,'name': product.name
@@ -87,6 +97,7 @@ def show_json(request):
             , 'rating': product.rating
         }
                 for product in product_list]
+        
         return JsonResponse(data, safe=False)
     #        user = models.ForeignKey(User, on_delete=models.CASCADE,  null=True)
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -98,6 +109,30 @@ def show_json(request):
     # is_featured = models.BooleanField(default=False)     
     # rating = models.FloatField(default=0.0)
 
+def show_json_asc(request):
+    #  product_list = Product.objects.all()
+    #  json_data = serializers.serialize("json", product_list)
+    #  return HttpResponse(json_data, description_type="application/json")
+        filter_type = request.GET.get("sort", "asc")  
+        if filter_type == "asc":
+            product_list = Product.objects.all().order_by("price")
+        else :
+            product_list = Product.objects.all().order_by("-price")
+        data = [{
+            'id': str(product.id)
+            ,'name': product.name
+            ,'price': product.price
+            ,'category': product.category
+            ,'description': product.description
+            ,'user_id': product.user_id
+            , 'thumbnail': product.thumbnail
+            , 'is_featured': product.is_featured
+            , 'rating': product.rating
+        }
+                for product in product_list]
+        
+        return JsonResponse(data, safe=False)
+    
 def show_xml_by_id(request, product_id):
     try:
         product_list = Product.objects.filter(pk=product_id)
@@ -248,3 +283,70 @@ def add_product_entry_ajax(request):
     new_product.save()
 
     return HttpResponse(b"CREATED", status=201)
+
+
+def proxy_image(request):
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
+    # CATEGORY_CHOICES =[
+    #     ('jersey', 'Jersey'),
+    #     ('shoes', 'Football Shoes'),
+    #     ('ball', 'Football'),
+    #     ('equipment', 'Training Equipment'),
+    #     ('accessories', 'Accessories'),
+    # ]
+    # user = models.ForeignKey(User, on_delete=models.CASCADE,  null=True)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # name = models.CharField(max_length=100)              
+    # price = models.IntegerField()                        
+    # description = models.TextField()                     
+    # thumbnail = models.URLField()                        
+    # category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='accessories')  
+    # is_featured = models.BooleanField(default=False)     
+    # rating = models.FloatField(default=0.0)
+@csrf_exempt
+def create_product_flutter(request):
+    
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        name = strip_tags(data.get("name", ""))  # Strip HTML tags
+        price = strip_tags(data.get("price", ""))
+        description = strip_tags(data.get("description", ""))  # Strip HTML tags
+        category = data.get("category", "")
+        thumbnail = data.get("thumbnail", "")
+        is_featured = data.get("is_featured", False)
+        rating = data.get("rating", 0.0)
+        print(request.user)
+        print(request.user.username)
+        user = request.user
+        
+        new_product = Product(
+            price=price,
+            name=name, 
+            description=description,
+            category=category,
+            thumbnail=thumbnail,
+            is_featured=is_featured,
+            rating=rating,
+            user=user
+        )
+        new_product.save()
+        
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    

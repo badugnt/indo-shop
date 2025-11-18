@@ -30,6 +30,14 @@
           class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-[#d74a1f] hover:text-white">
           My Product
         </a>
+        <a id="sorted-price-asc"
+          class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-[#d74a1f] hover:text-white">
+          sort harga asc
+        </a>
+        <a id="sorted-price-dsc"
+          class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-[#d74a1f] hover:text-white">
+          sort harga desc
+        </a>
         <button id="refresh-products-btn"
           class="text-gray-700 border border-gray-300 px-3 py-2 rounded-md font-medium transition-colors hover:bg-gray-100 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24"
@@ -87,6 +95,8 @@
   const showAllProductsButton = document.getElementById('filter-all');
   const showMyProductsButton = document.getElementById('filter-my');
   const refreshButton = document.getElementById('refresh-products-btn'); 
+  const sortAsc = document.getElementById('sorted-price-asc'); 
+  const sortDsc = document.getElementById('sorted-price-dsc'); 
 
   // --- STATE VARIABLES ---
   let activeFilter = 'all';
@@ -237,6 +247,53 @@
 
       const productData = await response.json();
       allProductsData = productData || [];
+      
+
+      filterAndDisplayProducts();
+    } catch (error) {
+      console.error('Error loading product:', error);
+      errorMessage.textContent = 'Failed to load products. Please check your connection and try again.';
+      displayPageSection({ showError: true, showLoading: false });
+    }
+  }
+   async function handleSortAsc() {
+    try {
+      displayPageSection({ showLoading: true, showGrid: false, showEmpty: false, showError: false });
+      
+      const response = await fetch(PRODUCT_API_ENDPOINT+'asc?sort=asc', {
+        headers: { 'Accept': 'application/json' },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch product data from server');
+      }
+
+      const productData = await response.json();
+      allProductsData = productData || [];
+      
+
+      filterAndDisplayProducts();
+    } catch (error) {
+      console.error('Error loading product:', error);
+      errorMessage.textContent = 'Failed to load products. Please check your connection and try again.';
+      displayPageSection({ showError: true, showLoading: false });
+    }
+  }
+     async function handleSortDsc() {
+    try {
+      displayPageSection({ showLoading: true, showGrid: false, showEmpty: false, showError: false });
+
+      const response = await fetch(PRODUCT_API_ENDPOINT+'asc?sort=dsc', {
+        headers: { 'Accept': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch product data from server');
+      }
+
+      const productData = await response.json();
+      allProductsData = productData || [];
+      
 
       filterAndDisplayProducts();
     } catch (error) {
@@ -298,10 +355,15 @@
     }
   }
 
+
   function initializeProductPage() {
     showAllProductsButton.addEventListener('click', handleShowAllProductsClick);
     showMyProductsButton.addEventListener('click', handleShowMyProductsClick);
     refreshButton.addEventListener('click', handleRefreshProductsClick);
+    sortAsc.addEventListener('click', handleSortAsc );
+    sortDsc.addEventListener('click', handleSortDsc );
+
+
 
     document.addEventListener('productAdded', function () {
       fetchProductsFromServer();

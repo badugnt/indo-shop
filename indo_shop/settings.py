@@ -29,8 +29,13 @@ SECRET_KEY = 'django-insecure-8g9$b-s4hf26n8gau&xf)#y2)krz&@0ojco1i)k+91lhnl-4ot
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 DEBUG = True
 
-
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "edlyn-marva-indoshop.pbp.cs.ui.ac.id"]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "edlyn-marva-indoshop.pbp.cs.ui.ac.id", "10.0.2.2"]
 CSRF_TRUSTED_ORIGINS =["https://edlyn-marva-indoshop.pbp.cs.ui.ac.id"]
 
 
@@ -43,10 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main'
+    'main',
+    'authentication',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'indo_shop.urls'
