@@ -39,6 +39,7 @@ def show_main(request):
         'class': 'PBP A',
         'product_list': product_list,
         'last_login': request.COOKIES.get('last_login', 'Never'),
+        'active_category': '' # Tambahkan default kosong
     }
 
     return render(request, "main.html", context)
@@ -74,17 +75,19 @@ def show_xml(request):
 
 
 def show_json(request):
-    #  product_list = Product.objects.all()
-    #  json_data = serializers.serialize("json", product_list)
-    #  return HttpResponse(json_data, description_type="application/json")
-        filter_type = request.GET.get("filter", "all")  
-        print(request.user)
-        print(filter_type)
+        filter_type = request.GET.get("filter", "all")
+        category_filter = request.GET.get("category", "") # Ambil parameter category
         
+        # 1. Base Query
         if filter_type == "all":
             product_list = Product.objects.all()
         else:
-            product_list = Product.objects.filter(user_id=request.user)
+            product_list = Product.objects.filter(user=request.user)
+            
+        # 2. Apply Category Filter if exists
+        if category_filter:
+             product_list = product_list.filter(category=category_filter)
+
         data = [{
             'id': str(product.id)
             ,'name': product.name
@@ -99,15 +102,6 @@ def show_json(request):
                 for product in product_list]
         
         return JsonResponse(data, safe=False)
-    #        user = models.ForeignKey(User, on_delete=models.CASCADE,  null=True)
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # name = models.CharField(max_length=100)              
-    # price = models.IntegerField()                        
-    # description = models.TextField()                     
-    # thumbnail = models.URLField()                        
-    # category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='accessories')  
-    # is_featured = models.BooleanField(default=False)     
-    # rating = models.FloatField(default=0.0)
 
 def show_json_asc(request):
     #  product_list = Product.objects.all()
@@ -246,14 +240,18 @@ def delete_product(request, id):
         product.delete()
         return JsonResponse({'message': 'Produk berhasil dihapus!'})
     return JsonResponse({'error': 'Method not allowed'}, status=405)
+
 def sort_product_category(request, category):
+    # Kita tetap ambil list di sini (opsional jika mau render SSR awal)
     product_list = Product.objects.filter(category=category)
     filter_param = request.GET.get("filter")
 
     if filter_param == "my":
         product_list = product_list.filter(user=request.user)
+    
     context = {
-        'product_list': product_list
+        'product_list': product_list,
+        'active_category': category # PENTING: Kirim info kategori ke template
     }
     return render(request, "main.html", context)
 
@@ -302,22 +300,7 @@ def proxy_image(request):
         )
     except requests.RequestException as e:
         return HttpResponse(f'Error fetching image: {str(e)}', status=500)
-    # CATEGORY_CHOICES =[
-    #     ('jersey', 'Jersey'),
-    #     ('shoes', 'Football Shoes'),
-    #     ('ball', 'Football'),
-    #     ('equipment', 'Training Equipment'),
-    #     ('accessories', 'Accessories'),
-    # ]
-    # user = models.ForeignKey(User, on_delete=models.CASCADE,  null=True)
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # name = models.CharField(max_length=100)              
-    # price = models.IntegerField()                        
-    # description = models.TextField()                     
-    # thumbnail = models.URLField()                        
-    # category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='accessories')  
-    # is_featured = models.BooleanField(default=False)     
-    # rating = models.FloatField(default=0.0)
+
 @csrf_exempt
 def create_product_flutter(request):
     
@@ -349,4 +332,3 @@ def create_product_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
-    
