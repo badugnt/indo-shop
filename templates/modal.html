@@ -15,7 +15,7 @@
     </div>
     
     <div class="px-6 py-4 space-y-6 form-style">
-      <form id="productForm" >
+      <form id="productForm">
         {% csrf_token %}
         <div class="mb-4">
           <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
@@ -90,35 +90,33 @@
         modal.classList.add('hidden');
       }, 150); 
   }
-  /**
- * Mengirim data dari form produk baru ke server secara asinkron (AJAX).
- */
+
 async function addProductEntry() {
-  // MODIFIKASI: URL disesuaikan dengan endpoint untuk menambah produk
-  await fetch("{% url 'main:add_product_entry_ajax' %}", {
+  // Mengirim data ke URL AJAX
+  const response = await fetch("{% url 'main:add_product_entry_ajax' %}", {
     method: "POST",
-    // MODIFIKASI: Mengambil data dari form dengan ID #productForm
     body: new FormData(document.querySelector('#productForm')), 
   });
 
-  // MODIFIKASI: Reset form produk setelah berhasil dikirim
-  document.getElementById("productForm").reset();
-  
-  
-  hideModal(); 
-  
-  
-  showToast('Product added successfully!', '', 'success');
+  if (response.ok) {
+    // Reset form produk setelah berhasil dikirim
+    document.getElementById("productForm").reset();
+    hideModal(); 
+    showToast('Product added successfully!', '', 'success');
+    
+    // Trigger event agar main.html me-refresh daftar produk
+    document.dispatchEvent(new CustomEvent('productAdded'));
+  } else {
+    alert("Failed to add product.");
+  }
 
-  
-  // Ini berguna jika Anda ingin me-refresh daftar produk secara otomatis
-  document.dispatchEvent(new CustomEvent('productAdded'));
-
-  
   return false; 
 }
-  document.getElementById("productForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      // addProductEntry();
-  })
+
+// PERBAIKAN: Menggunakan event 'submit' pada FORM, bukan 'click' pada button.
+// Kita juga menambahkan parameter 'e' agar e.preventDefault() bekerja.
+document.getElementById("productForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    addProductEntry();
+});
 </script>
